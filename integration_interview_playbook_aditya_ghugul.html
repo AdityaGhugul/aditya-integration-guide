@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Integration Engineer's Interview Playbook — Aditya Ghugul</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e29;
+  --bg4: #20263a;
+  --border: #252b3d;
+  --border2: #2e3650;
+  --teal: #2dd4bf;
+  --teal2: #14b8a6;
+  --amber: #f59e0b;
+  --amber2: #d97706;
+  --red: #f87171;
+  --blue: #60a5fa;
+  --green: #4ade80;
+  --purple: #a78bfa;
+  --text: #e8eaf0;
+  --text2: #9aa0b8;
+  --text3: #5a6280;
+  --kill: #3d1515;
+  --kill-b: #7f1d1d;
+  --kill-t: #fca5a5;
+  --core-b: #1e3a5f;
+  --core-t: #93c5fd;
+  --mid-b: #1a3a1a;
+  --mid-t: #86efac;
+  --adv-b: #3d2e0a;
+  --adv-t: #fcd34d;
+  --exp-b: #2d1a4d;
+  --exp-t: #c4b5fd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Source Serif 4',Georgia,serif;line-height:1.7;font-size:16px}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(13,15,20,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:0;height:56px;overflow-x:auto}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--teal);white-space:nowrap;margin-right:2rem;text-decoration:none}
+.nav-links{display:flex;gap:0;flex-shrink:0}
+.nav-links a{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--text3);text-decoration:none;padding:0 14px;height:56px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);border-bottom-color:var(--teal)}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.3}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(45,212,191,.08) 0%,transparent 70%);pointer-events:none}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--teal);background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:20px;padding:4px 14px;display:inline-block;margin-bottom:2rem;letter-spacing:.08em}
+#hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.1;max-width:800px;margin-bottom:1.5rem;position:relative}
+#hero h1 span{color:var(--teal)}
+.hero-sub{font-size:1.15rem;color:var(--text2);max-width:560px;margin:0 auto 2.5rem;font-style:italic;font-weight:300}
+.author-card{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:20px 28px;display:inline-flex;align-items:center;gap:16px;margin-bottom:3rem;position:relative}
+.author-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--amber));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:#000;flex-shrink:0}
+.author-info{text-align:left}
+.author-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--text)}
+.author-title{font-size:12px;color:var(--text2);margin-top:2px}
+.author-co{font-size:11px;color:var(--teal);margin-top:1px;font-family:'JetBrains Mono',monospace}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;position:relative}
+.hstat{text-align:center}
+.hstat-n{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--teal)}
+.hstat-l{font-size:12px;color:var(--text3);font-family:'Syne',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:2.5rem;position:relative}
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;padding:12px 24px;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;border:none;letter-spacing:.03em}
+.btn-primary{background:var(--teal);color:#000}
+.btn-primary:hover{background:var(--teal2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+
+/* ── SECTIONS ── */
+section{padding:5rem 2rem}
+.container{max-width:900px;margin:0 auto}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem}
+.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3.5vw,2.4rem);line-height:1.2;margin-bottom:1rem}
+.section-desc{color:var(--text2);font-size:1rem;max-width:640px;margin-bottom:3rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0}
+
+/* ── STORY ── */
+#story{background:var(--bg2)}
+.story-box{background:var(--bg3);border:1px solid var(--border2);border-radius:16px;padding:2rem 2.5rem;position:relative;overflow:hidden}
+.story-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--amber))}
+.story-box p{color:var(--text2);margin-bottom:1rem;font-size:1rem}
+.story-box p:last-child{margin-bottom:0}
+.story-box p strong{color:var(--text)}
+.quote{font-style:italic;font-size:1.15rem;color:var(--teal);border-left:3px solid var(--teal);padding-left:1.25rem;margin:1.5rem 0}
+
+/* ── HOW TO USE ── */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.how-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
+.how-card:hover{border-color:var(--border2)}
+.how-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--teal);opacity:.4;line-height:1}
+.how-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin:8px 0 6px;color:var(--text)}
+.how-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* ── TIER LEGEND ── */
+.tier-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:2rem}
+.tier-pill{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
+.tier-pill.kill{background:var(--kill);border:1px solid var(--kill-b);color:var(--kill-t)}
+.tier-pill.core{background:rgba(30,58,95,.5);border:1px solid var(--core-b);color:var(--core-t)}
+.tier-pill.mid{background:var(--mid-b);border:1px solid #14532d;color:var(--mid-t)}
+.tier-pill.adv{background:var(--adv-b);border:1px solid #78350f;color:var(--adv-t)}
+.tier-pill.exp{background:var(--exp-b);border:1px solid #4c1d95;color:var(--exp-t)}
+.tier-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+/* ── QUESTIONS ── */
+#questions{background:var(--bg)}
+.q-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.q-search{flex:1;min-width:200px;padding:9px 14px;font-size:13px;font-family:'Source Serif 4',serif;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);color:var(--text);outline:none;transition:border-color .2s}
+.q-search:focus{border-color:var(--teal)}
+.q-search::placeholder{color:var(--text3)}
+.qfb{padding:6px 13px;font-size:11px;font-family:'Syne',sans-serif;font-weight:700;border-radius:20px;border:1px solid var(--border2);background:var(--bg2);color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.qfb:hover{color:var(--text);border-color:var(--border)}
+.qfb.on{background:var(--bg3);color:var(--text);border-color:var(--teal)}
+.q-sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--border);margin:1.5rem 0 10px;display:flex;align-items:center;gap:10px}
+.q-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.qcard{border:1px solid var(--border);border-radius:10px;background:var(--bg2);cursor:pointer;overflow:hidden;transition:border-color .15s}
+.qcard:hover{border-color:var(--border2)}
+.qcard.open{border-color:var(--border2)}
+.qcard-h{display:flex;align-items:flex-start;gap:10px;padding:11px 14px}
+.qcard-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);min-width:24px;padding-top:2px;flex-shrink:0}
+.qcard-body{flex:1}
+.qcard-q{font-size:13px;color:var(--text);line-height:1.5;font-family:'Syne',sans-serif;font-weight:600}
+.qcard-hint{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.65;display:none;border-top:1px solid var(--border);padding-top:10px;font-family:'Source Serif 4',serif;font-weight:300}
+.qcard.open .qcard-hint{display:block}
+.qcard-hint strong{color:var(--teal);font-weight:600;font-family:'Syne',sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.tbadge{padding:2px 8px;border-radius:8px;font-size:10px;font-family:'Syne',sans-serif;font-weight:700;flex-shrink:0;margin-top:1px}
+.tbadge.kill{background:var(--kill);color:var(--kill-t);border:1px solid var(--kill-b)}
+.tbadge.core{background:rgba(30,58,95,.5);color:var(--core-t);border:1px solid var(--core-b)}
+.tbadge.mid{background:var(--mid-b);color:var(--mid-t);border:1px solid #14532d}
+.tbadge.adv{background:var(--adv-b);color:var(--adv-t);border:1px solid #78350f}
+.tbadge.exp{background:var(--exp-b);color:var(--exp-t);border:1px solid #4c1d95}
+.topic-tag{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-left:6px}
+.q-empty{padding:2rem;text-align:center;font-size:13px;color:var(--text3)}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:1rem}
+
+/* ── TERMS ── */
+#terms{background:var(--bg2)}
+.term-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.term-search{flex:1;min-width:200px;padding:9px 14px;font-size:13px;font-family:'Source Serif 4',serif;border:1px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--text);outline:none;transition:border-color .2s}
+.term-search:focus{border-color:var(--teal)}
+.term-search::placeholder{color:var(--text3)}
+.tfb{padding:6px 13px;font-size:11px;font-family:'Syne',sans-serif;font-weight:700;border-radius:20px;border:1px solid var(--border2);background:var(--bg3);color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tfb:hover{color:var(--text);border-color:var(--border)}
+.tfb.on{background:var(--bg4);color:var(--text);border-color:var(--teal)}
+.term-sec{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--border);margin:1.5rem 0 10px;color:var(--text2)}
+.term-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.tcard{border:1px solid var(--border);border-radius:10px;background:var(--bg3);cursor:pointer;overflow:hidden;transition:border-color .15s}
+.tcard:hover{border-color:var(--border2)}
+.tcard.open{border-color:var(--teal)}
+.tcard-h{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.tcard-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);flex:1}
+.dbadge{padding:2px 8px;border-radius:8px;font-size:10px;font-family:'Syne',sans-serif;font-weight:700}
+.tcard-lay{font-size:11px;color:var(--text3);padding:0 14px 9px;font-style:italic}
+.tcard-body{border-top:1px solid var(--border);padding:12px 14px;display:none;flex-direction:column;gap:10px}
+.tcard.open .tcard-body{display:flex}
+.tbl{font-size:10px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.tbl-l{color:var(--green)}.tbl-t{color:var(--blue)}.tbl-i{color:var(--purple)}
+.tbt{font-size:12px;line-height:1.65;color:var(--text2);font-family:'Source Serif 4',serif;font-weight:300}
+.tbi .tbt{font-style:italic;background:rgba(167,139,250,.08);border-left:2px solid var(--purple);padding:8px 11px;border-radius:0 6px 6px 0;color:var(--text)}
+/* domain badge colors */
+.da{background:rgba(96,165,250,.1);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
+.di{background:rgba(74,222,128,.1);color:#86efac;border:1px solid rgba(74,222,128,.2)}
+.ds{background:rgba(248,113,113,.1);color:#fca5a5;border:1px solid rgba(248,113,113,.2)}
+.dm{background:rgba(251,191,36,.1);color:#fcd34d;border:1px solid rgba(251,191,36,.2)}
+.dr{background:rgba(167,139,250,.1);color:#c4b5fd;border:1px solid rgba(167,139,250,.2)}
+.do{background:rgba(52,211,153,.1);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.dc{background:rgba(148,163,184,.1);color:#cbd5e1;border:1px solid rgba(148,163,184,.2)}
+
+/* ── STUDY PLAN ── */
+#plan{background:var(--bg)}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.week-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .2s;position:relative;overflow:hidden}
+.week-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.wk1::before,.wk2::before{background:var(--teal)}
+.wk3::before,.wk4::before{background:var(--blue)}
+.wk5::before,.wk6::before{background:var(--amber)}
+.wk7::before,.wk8::before{background:var(--purple)}
+.wk9::before,.wk10::before{background:var(--green)}
+.week-card:hover{border-color:var(--border2)}
+.wk-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:4px}
+.wk-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text);margin-bottom:8px}
+.wk-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.wk-daily{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);margin-top:8px}
+.plan-tip{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:20px 24px;margin-top:2rem}
+.plan-tip-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--amber);margin-bottom:8px}
+.plan-tip p{font-size:13px;color:var(--text2);line-height:1.7}
+.plan-tip strong{color:var(--text)}
+
+/* ── LINKEDIN TEMPLATE ── */
+#linkedin{background:var(--bg2)}
+.li-box{background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:24px;position:relative}
+.li-box-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.li-post{font-size:14px;line-height:1.8;color:var(--text);white-space:pre-line;font-family:'Source Serif 4',serif}
+.li-copy{position:absolute;top:16px;right:16px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s}
+.li-copy:hover{color:var(--teal);border-color:var(--teal)}
+.li-tips{margin-top:2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.li-tip{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.li-tip-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--text);margin-bottom:5px}
+.li-tip-desc{font-size:11px;color:var(--text2);line-height:1.6}
+
+/* ── FOOTER ── */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center}
+.footer-inner{max-width:600px;margin:0 auto}
+footer h3{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--text);margin-bottom:8px}
+footer p{font-size:13px;color:var(--text3);margin-bottom:1.5rem}
+.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.footer-links a{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--text3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--teal)}
+.footer-credit{font-size:11px;color:var(--text3);margin-top:2rem;font-family:'JetBrains Mono',monospace}
+
+/* ── UTILS ── */
+@media(max-width:640px){
+  nav{padding:0 1rem}
+  section{padding:3.5rem 1.25rem}
+  #hero{padding:5rem 1.25rem 3rem}
+  .author-card{flex-direction:column;text-align:center}
+  .author-info{text-align:center}
+  .how-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero">AG · GUIDE</a>
+    <div class="nav-links">
+      <a href="#story">Story</a>
+      <a href="#howto">How to Use</a>
+      <a href="#questions">100 Questions</a>
+      <a href="#terms">Terminology</a>
+      <a href="#plan">Study Plan</a>
+      <a href="#linkedin">Post Template</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag">Integration Engineer Series · Vol. 1</div>
+  <h1>The Integration Engineer's <span>Interview Playbook</span></h1>
+  <p class="hero-sub">From API basics to architect-level thinking — a field guide built from real experience, not textbooks.</p>
+  <div class="author-card">
+    <div class="author-avatar">AG</div>
+    <div class="author-info">
+      <div class="author-name">Aditya Ghugul</div>
+      <div class="author-title">API Gateway Engineer · OAuth2 · mTLS · Axway · Azure APIM</div>
+      <div class="author-co">Tata Consultancy Services · 100M+ API Requests/Day</div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">100</div><div class="hstat-l">Interview Questions</div></div>
+    <div class="hstat"><div class="hstat-n">100</div><div class="hstat-l">Key Terms</div></div>
+    <div class="hstat"><div class="hstat-n">10</div><div class="hstat-l">Week Study Plan</div></div>
+    <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">Tiers of Difficulty</div></div>
+  </div>
+  <div class="hero-cta">
+    <a href="#questions" class="btn btn-primary">Start with Questions →</a>
+    <a href="#terms" class="btn btn-outline">Terminology Cheat Sheet</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STORY -->
+<section id="story">
+  <div class="container">
+    <div class="section-label">Why this guide exists</div>
+    <h2 class="section-title">I had the experience. I just couldn't explain it.</h2>
+    <div class="story-box">
+      <p>After <strong>5 years in integration engineering</strong> — 3 of them specializing in Axway APIM at TCS handling over 100 million API requests per day — I hit a frustrating wall.</p>
+      <p>The job calls were rare. And when they came, I knew the answers. I had built complex OAuth flows, designed policy-based security architectures, debugged production incidents at scale. <strong>But in interviews, I stumbled.</strong></p>
+      <blockquote class="quote">"I knew how to do the work. I just couldn't say it in the language interviewers expected."</blockquote>
+      <p>I'd answer in layman terms when I needed technical precision. I'd describe what I built without naming the patterns. I knew content-based routing — I just called it "checking the message and deciding where to send it."</p>
+      <p>So I built this. <strong>100 questions</strong> organized exactly the way a real interviewer thinks — from instant-rejection basics to architect-level system design. <strong>100 terms</strong> with the exact interview-ready sentences to use them in. And a <strong>10-week plan</strong> that fits around a full-time job.</p>
+      <p>This guide is for every integration engineer who has done real work but struggles to present it in the language that gets you hired.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW TO USE -->
+<section id="howto" style="background:var(--bg)">
+  <div class="container">
+    <div class="section-label">Getting started</div>
+    <h2 class="section-title">How to use this guide</h2>
+    <p class="section-desc">This is not a document to read once. It is a training system. Use it in short daily sessions for maximum retention.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-title">Start with the red tier</div>
+        <div class="how-desc">The 5 instant-rejection questions are non-negotiable. If you can't answer these cold, nothing else matters. Master them first.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-title">Click to reveal answers</div>
+        <div class="how-desc">Try to answer every question out loud before clicking. Speaking forces recall. Reading is passive. Interviews are spoken.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-title">Use the terminology cards</div>
+        <div class="how-desc">For each term, read your layman version first — you already know this. Then read the technical version. Then say the interview sentence out loud 3 times.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-title">10 questions per day</div>
+        <div class="how-desc">Do not binge. 10 questions per day, spoken aloud, is more effective than 100 questions read silently in one sitting.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">05</div>
+        <div class="how-title">Map to your own stories</div>
+        <div class="how-desc">For every question you can answer technically, immediately think of a real project where you did that. That becomes your interview story.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">06</div>
+        <div class="how-title">Apply from week 3</div>
+        <div class="how-desc">Don't wait until you feel "ready." Apply from week 3 for stretch roles. Real interviews teach you more than solo practice ever will.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem">
+      <div class="section-label" style="margin-bottom:1rem">Tier guide</div>
+      <div class="tier-legend">
+        <div class="tier-pill kill"><div class="tier-dot"></div>🔴 Instant rejection — not knowing these ends the interview immediately</div>
+        <div class="tier-pill core"><div class="tier-dot"></div>🔵 Core must-know — expected from any 3+ year integration engineer</div>
+        <div class="tier-pill mid"><div class="tier-dot"></div>🟢 Mid-level — separates "I've used this tool" from "I've built real solutions"</div>
+        <div class="tier-pill adv"><div class="tier-dot"></div>🟡 Advanced — expected at senior / lead level</div>
+        <div class="tier-pill exp"><div class="tier-dot"></div>🟣 Expert / architect — principal engineer and system design discussions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUESTIONS -->
+<section id="questions">
+  <div class="container">
+    <div class="section-label">The interview questions</div>
+    <h2 class="section-title">100 Questions, 5 Tiers</h2>
+    <p class="section-desc">Click any question to reveal what the interviewer is actually looking for in your answer. Try answering out loud first.</p>
+
+    <div class="q-controls">
+      <input type="text" class="q-search" id="qsearch" placeholder="Search questions..." oninput="renderQ()">
+      <button class="qfb on" onclick="setQF('all',this)">All 100</button>
+      <button class="qfb" onclick="setQF('kill',this)">🔴 Rejection</button>
+      <button class="qfb" onclick="setQF('core',this)">🔵 Core</button>
+      <button class="qfb" onclick="setQF('mid',this)">🟢 Mid</button>
+      <button class="qfb" onclick="setQF('adv',this)">🟡 Advanced</button>
+      <button class="qfb" onclick="setQF('exp',this)">🟣 Expert</button>
+    </div>
+    <div class="q-counter" id="qcounter"></div>
+    <div id="qout"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TERMS -->
+<section id="terms">
+  <div class="container">
+    <div class="section-label">Terminology cheat sheet</div>
+    <h2 class="section-title">100 Terms. Three layers each.</h2>
+    <p class="section-desc">Every term has: your layman version (what you already know), the technical definition (what to learn), and the exact interview sentence (what to say).</p>
+
+    <div class="term-controls">
+      <input type="text" class="term-search" id="tsearch" placeholder="Search terms..." oninput="renderT()">
+      <button class="tfb on" onclick="setTF('all',this)">All</button>
+      <button class="tfb" onclick="setTF('Auth',this)">Auth</button>
+      <button class="tfb" onclick="setTF('Integration',this)">Integration</button>
+      <button class="tfb" onclick="setTF('Security',this)">Security</button>
+      <button class="tfb" onclick="setTF('Messaging',this)">Messaging</button>
+      <button class="tfb" onclick="setTF('Architecture',this)">Architecture</button>
+      <button class="tfb" onclick="setTF('Observability',this)">Observability</button>
+      <button class="tfb" onclick="setTF('CI/CD',this)">CI/CD</button>
+    </div>
+    <div id="tout"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STUDY PLAN -->
+<section id="plan">
+  <div class="container">
+    <div class="section-label">Preparation roadmap</div>
+    <h2 class="section-title">10-Week Study Plan</h2>
+    <p class="section-desc">Designed for someone with a full-time job — 1.5 to 2 hours per day maximum. Consistent beats intensive every time.</p>
+
+    <div class="plan-grid">
+      <div class="week-card wk1">
+        <div class="wk-label">WEEK 1</div>
+        <div class="wk-title">Foundation Pass — Questions 1–50</div>
+        <div class="wk-desc">Go through the first 50 questions. Don't memorize — understand. Mark every question you can't answer confidently. Build your gap list.</div>
+        <div class="wk-daily">Daily: 1hr questions + 30min gap notes</div>
+      </div>
+      <div class="week-card wk2">
+        <div class="wk-label">WEEK 2</div>
+        <div class="wk-title">Foundation Pass — Questions 51–100</div>
+        <div class="wk-desc">Complete the second 50 questions. By end of week you should have a clear picture of which domains are strong and which need work.</div>
+        <div class="wk-daily">Daily: 1hr questions + 30min gap notes</div>
+      </div>
+      <div class="week-card wk3">
+        <div class="wk-label">WEEK 3</div>
+        <div class="wk-title">Gap Closing — Weakest Domain</div>
+        <div class="wk-desc">Deep dive your weakest domain only. If OAuth is weak, read RFC 6749. If Kafka is unfamiliar, build a tiny demo. Fix gaps the questions exposed.</div>
+        <div class="wk-daily">Daily: 1.5hr focused domain study</div>
+      </div>
+      <div class="week-card wk4">
+        <div class="wk-label">WEEK 4</div>
+        <div class="wk-title">Gap Closing — Second Weakest Domain</div>
+        <div class="wk-desc">Repeat for your second weakest domain. Don't spread thin — go deep on one thing at a time. Quality of understanding beats breadth of coverage.</div>
+        <div class="wk-daily">Daily: 1.5hr focused domain study</div>
+      </div>
+      <div class="week-card wk5">
+        <div class="wk-label">WEEK 5</div>
+        <div class="wk-title">Terminology — 10 Terms Per Day</div>
+        <div class="wk-desc">Work through the terminology cheat sheet. For each term: say layman version → say technical version → say interview sentence out loud. Record yourself.</div>
+        <div class="wk-daily">Daily: 30min terms (spoken, not read)</div>
+      </div>
+      <div class="week-card wk6">
+        <div class="wk-label">WEEK 6</div>
+        <div class="wk-title">Your Story Bank</div>
+        <div class="wk-desc">Write 10 real stories from your work using STAR format. Cover: complex design, security challenge, production incident, performance problem, stakeholder conflict, migration.</div>
+        <div class="wk-daily">Daily: 45min writing + refining stories</div>
+      </div>
+      <div class="week-card wk7">
+        <div class="wk-label">WEEK 7</div>
+        <div class="wk-title">System Design Practice</div>
+        <div class="wk-desc">Pick 2 expert-tier questions per day. Spend 20 minutes designing on paper before reading the answer. Do this out loud. Draw it. Narrate it.</div>
+        <div class="wk-daily">Daily: 1hr design practice (spoken)</div>
+      </div>
+      <div class="week-card wk8">
+        <div class="wk-label">WEEK 8</div>
+        <div class="wk-title">System Design Practice + Apply</div>
+        <div class="wk-desc">Continue design practice. Start applying to 2–3 roles per week. Early interviews are the best practice. A week-4 rejection teaches more than solo study.</div>
+        <div class="wk-daily">Daily: 45min design + applications</div>
+      </div>
+      <div class="week-card wk9">
+        <div class="wk-label">WEEK 9</div>
+        <div class="wk-title">Second Pass + Mock Interviews</div>
+        <div class="wk-desc">Second pass of all 100 questions — much faster now. Focus on ones you still stumble on. Do mock interviews with a peer if possible. Debrief after each.</div>
+        <div class="wk-daily">Daily: 1hr revision + active applying</div>
+      </div>
+      <div class="week-card wk10">
+        <div class="wk-label">WEEK 10</div>
+        <div class="wk-title">Final Polish + Active Interview Mode</div>
+        <div class="wk-desc">Light revision only. Focus energy on real interviews. Every interview gives you a data point. Track what was asked, review after, update your weak areas list.</div>
+        <div class="wk-daily">Daily: 30min light prep + interviews</div>
+      </div>
+    </div>
+
+    <div class="plan-tip">
+      <div class="plan-tip-title">⚡ The Most Important Mindset Shift</div>
+      <p>Stop thinking of technical terms as "fancy words for simple things." Start thinking of them as <strong>compressed, precise language that signals you think at the same level as the interviewer.</strong> When you say "content-based routing" instead of "checking the message to decide where to send it" — you're not showing off. You're demonstrating that you belong in the conversation. That's all an interview is.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LINKEDIN POST TEMPLATE -->
+<section id="linkedin">
+  <div class="container">
+    <div class="section-label">Share your journey</div>
+    <h2 class="section-title">LinkedIn Post Template</h2>
+    <p class="section-desc">Use this as a starting point. Personalise it with your own story — authenticity always outperforms polish on LinkedIn.</p>
+
+    <div class="li-box">
+      <div class="li-box-label">Ready-to-use post — customise and make it yours</div>
+      <button class="li-copy" onclick="copyPost()">Copy</button>
+      <div class="li-post" id="lipost">I spent 5 years in integration engineering.
+
+3 of those years on Axway APIM at TCS, handling 100M+ API requests daily.
+
+I knew OAuth flows. I had designed mTLS policies. I had debugged production incidents at 2am.
+
+But in interviews, I kept stumbling.
+
+Not because I didn't know the answers.
+
+Because I couldn't say them in the language interviewers expected.
+
+I'd say "checking the message to decide where to route it" instead of "content-based routing."
+
+I'd say "stopping calls to a broken service" instead of "circuit breaker pattern."
+
+The knowledge was there. The vocabulary wasn't.
+
+So I spent 3 months building a complete interview guide:
+
+→ 100 questions across 5 difficulty tiers (from instant-rejection basics to architect-level design)
+→ 100 key terms with layman version, technical definition, AND the exact sentence to use in interviews
+→ 10-week study plan that fits around a full-time job
+→ Covers: API fundamentals, OAuth/JWT, integration patterns, messaging, observability, CI/CD
+
+It's completely free. No email required. No paywall.
+
+Link in first comment 👇
+
+If this helps even one person explain their experience better in an interview, it was worth building.
+
+---
+
+What's the hardest integration interview question you've faced? Drop it in the comments — I'll answer it.
+
+#IntegrationEngineer #APIManagement #AxwayAPIM #TechInterview #APIGateway #OAuth2 #CareerGrowth</div>
+    </div>
+
+    <div class="li-tips">
+      <div class="li-tip">
+        <div class="li-tip-title">🕐 Best time to post</div>
+        <div class="li-tip-desc">Tuesday–Thursday, 8–9am or 12–1pm IST. Avoid weekends — professional content gets buried.</div>
+      </div>
+      <div class="li-tip">
+        <div class="li-tip-title">🔗 Put link in first comment</div>
+        <div class="li-tip-desc">LinkedIn slightly suppresses posts with external links. Post without the link, then add it as your first comment immediately after.</div>
+      </div>
+      <div class="li-tip">
+        <div class="li-tip-title">💬 Reply to every comment</div>
+        <div class="li-tip-desc">In the first hour, reply to every comment. LinkedIn treats comment activity as a quality signal and expands your reach.</div>
+      </div>
+      <div class="li-tip">
+        <div class="li-tip-title">📌 End with a question</div>
+        <div class="li-tip-desc">The last line asking people to drop their hardest question drives comments, which drives reach. Never end a post without a call to engage.</div>
+      </div>
+      <div class="li-tip">
+        <div class="li-tip-title">♻️ Repurpose content</div>
+        <div class="li-tip-desc">Over the next 4 weeks, post individual sections as standalone posts. "The 5 questions that end an Axway interview immediately" will get its own traction.</div>
+      </div>
+      <div class="li-tip">
+        <div class="li-tip-title">📣 Hashtags to use</div>
+        <div class="li-tip-desc">#IntegrationEngineer #APIManagement #AxwayAPIM #TechInterview #APIGateway #OAuth2 — 4 to 6 hashtags maximum.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <h3>The Integration Engineer's Interview Playbook</h3>
+    <p>Built from 5 years of real integration engineering experience. Free for the community, always.</p>
+    <div class="footer-links">
+      <a href="#hero">Back to top</a>
+      <a href="#questions">100 Questions</a>
+      <a href="#terms">Terminology</a>
+      <a href="#plan">Study Plan</a>
+      <a href="https://www.linkedin.com/in/aditya-ghugul" target="_blank">Connect on LinkedIn</a>
+    </div>
+    <div class="footer-credit">Made by Aditya Ghugul · Tata Consultancy Services · Nagpur, India</div>
+  </div>
+</footer>
+
+<script>
+/* ===== QUESTION DATA ===== */
+const QS=[
+  {t:"kill",topic:"API Fundamentals",q:"What is an API Gateway and what is its primary role in an integration architecture?",h:"If you can't explain that a gateway is the single entry point handling cross-cutting concerns — auth, rate limiting, routing, transformation, observability — the interview ends here. Must distinguish from a simple reverse proxy."},
+  {t:"kill",topic:"Protocols",q:"What is the difference between REST and SOAP? When would you choose each?",h:"REST = stateless, resource-oriented, JSON/HTTP, lightweight. SOAP = contract-driven, WSDL, XML envelope, WS-Security, enterprise B2B. Not knowing both in depth at a fundamental level is disqualifying for any integration role."},
+  {t:"kill",topic:"Auth",q:"Explain OAuth 2.0. What problem does it solve and what are the four main grant types?",h:"OAuth 2.0 = delegated authorization (not authentication). Solves: third-party access without sharing passwords. Grant types: Authorization Code (user-facing), Client Credentials (M2M), Device Code (constrained devices), Resource Owner Password (legacy/avoid). Must know all flows, not just names."},
+  {t:"kill",topic:"Messaging",q:"What is a message broker? What problem does it solve and name two examples.",h:"Decouples producers from consumers, enables async communication, handles buffering and delivery guarantees. Examples: Apache Kafka, RabbitMQ, IBM MQ, ActiveMQ, Azure Service Bus. Not knowing this is a hard stop."},
+  {t:"kill",topic:"Integration Patterns",q:"What is the difference between synchronous and asynchronous integration? Give a real-world example of each.",h:"Sync = caller blocks waiting for response (REST API call). Async = fire and forget or callback (message queue, webhook). Must understand trade-offs: coupling, latency, reliability, scalability. A senior engineer must know both deeply."},
+  // CORE
+  {t:"core",topic:"HTTP",q:"Explain HTTP methods — GET, POST, PUT, PATCH, DELETE. What makes an operation idempotent?",h:"GET/PUT/DELETE are idempotent (same result on repeat). POST is not. PATCH may or may not be. Idempotency is critical for retry logic design. Must know cold."},
+  {t:"core",topic:"HTTP",q:"What are HTTP status codes? Explain the 2xx, 4xx, and 5xx families with key examples.",h:"200 OK, 201 Created, 204 No Content. 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests. 500 Internal Error, 502 Bad Gateway, 503 Unavailable, 504 Timeout. Must know these cold."},
+  {t:"core",topic:"Auth",q:"What is the difference between authentication and authorization? Why does confusing them cause real bugs?",h:"AuthN = proving identity (who are you). AuthZ = access decision (what can you do). Confusion leads to: authenticating a user then not checking what they're allowed to access (BOLA/IDOR). Foundational — no excuse for confusion at senior level."},
+  {t:"core",topic:"Auth",q:"What is JWT? What are its three parts and what does each contain? What are common JWT vulnerabilities?",h:"Header (alg/typ) + Payload (claims: iss, sub, exp, aud, custom) + Signature. Vulnerabilities: alg:none attack, RS256→HS256 confusion, weak secret brute force, missing exp/iss/aud validation, sensitive data in unencrypted payload."},
+  {t:"core",topic:"API Design",q:"What is REST? Explain the key constraints of a RESTful architecture.",h:"Stateless (every request self-contained), client-server, cacheable, uniform interface (resource URIs + standard HTTP methods), layered system, code on demand (optional). Statelessness is most important for integration — impacts scaling and session management."},
+  {t:"core",topic:"API Design",q:"What is API versioning? What strategies exist and what are the trade-offs?",h:"URI versioning (/v1/), query param (?version=1), header versioning (Accept: application/vnd.api.v1+json). URI = most visible, cacheable, ugly URLs. Header = clean but hard to test in browser. No strategy is universally best — know trade-offs."},
+  {t:"core",topic:"Integration Patterns",q:"What is the publish-subscribe pattern? How does it differ from point-to-point messaging?",h:"Pub/sub = one producer, multiple consumers independently via topics. P2P = one producer, one consumer via queue (competing consumers). Pub/sub decouples consumers from producers, scales fan-out. Know when each fits."},
+  {t:"core",topic:"Integration Patterns",q:"What is a dead letter queue and why is it critical in integration?",h:"DLQ = destination for messages failing after max retries. Prevents poison messages from blocking consumers. Must have: monitoring, alerting, and a reprocessing strategy. Without a DLQ strategy, one bad message can halt entire pipelines."},
+  {t:"core",topic:"Integration Patterns",q:"What is the circuit breaker pattern? Why is it needed in distributed integration?",h:"Three states: closed (normal), open (blocking after threshold), half-open (testing recovery). Without it, one slow backend can exhaust thread pools and cascade failures across the entire integration layer."},
+  {t:"core",topic:"Messaging",q:"What is the difference between a queue and a topic in messaging systems?",h:"Queue = competing consumers, one message to one consumer. Topic = fan-out, all subscribers receive every message independently. Most brokers support both. Know delivery semantics for each."},
+  {t:"core",topic:"Security",q:"What is TLS and why is it important? What is the difference between one-way and mutual TLS?",h:"TLS = encrypts data in transit + authenticates server. One-way = client verifies server cert. Mutual (mTLS) = both sides present certs, used for service-to-service zero-trust auth. Know handshake basics and certificate chain validation."},
+  {t:"core",topic:"API Design",q:"What is OpenAPI Specification? Why is it important for integration engineers?",h:"Machine-readable API contract (YAML/JSON). Enables: code generation, mock servers, automated testing, gateway import. API-first design starts with OpenAPI. Must know structure: paths, components, schemas, security definitions."},
+  {t:"core",topic:"Integration Patterns",q:"What is content-based routing? Give a real integration example.",h:"Route messages to different destinations based on content (header, payload field, property). Example: route payments above threshold to fraud service, others to standard processor. Fundamental mediation pattern every integration engineer must know."},
+  {t:"core",topic:"Error Handling",q:"What is the retry pattern? What considerations make it safe to implement?",h:"Retry with backoff (fixed, exponential, jitter). Must consider: idempotency of target (retrying non-idempotent calls causes duplicates), max retry limit, DLQ fallback, exponential backoff with jitter to prevent thundering herd."},
+  {t:"core",topic:"Observability",q:"What is a correlation ID and why is it critical in integration architectures?",h:"Unique ID attached at entry point, propagated through all downstream calls. Enables end-to-end tracing across services. Without it, debugging distributed failures is nearly impossible. Must be passed in headers (X-Correlation-ID)."},
+  {t:"core",topic:"Auth",q:"What are OAuth 2.0 scopes? How should they be designed for least-privilege access?",h:"Scopes = granular permissions. Good design: resource-based (read:orders, write:payments), not overly broad (admin), minimum needed per client. Token inspection always checks scope matches operation. Scope creep = privilege escalation risk."},
+  {t:"core",topic:"Integration Patterns",q:"What is data enrichment in integration? Give an example.",h:"Augmenting incoming message with data from another source before forwarding. E.g., incoming order has customer ID → lookup customer profile → enrich order with name, address, credit limit before routing to fulfilment."},
+  {t:"core",topic:"Error Handling",q:"What is idempotency and why is it foundational to safe integration design?",h:"Same operation executed multiple times produces same result as once. Critical for retry safety. Implementation: idempotency key (client-generated UUID) stored server-side with result, 24hr TTL. Without idempotency, retries cause duplicate payments, double inventory deductions."},
+  {t:"core",topic:"HTTP",q:"What is HATEOAS? Is it required for a truly RESTful API?",h:"Hypermedia As The Engine Of Application State — responses include links to next actions. Richardson Maturity Model level 3. Rarely implemented in practice. Most enterprise APIs stop at level 2 (resources + HTTP verbs). Know it conceptually."},
+  {t:"core",topic:"Messaging",q:"What is message acknowledgement and why does it matter for delivery guarantees?",h:"Ack = consumer confirms successful processing. Before ack = at-least-once. Auto-ack = at-most-once (can lose messages). Exactly-once requires idempotent consumers + transactional broker. Know the delivery guarantee spectrum cold."},
+  // MID
+  {t:"mid",topic:"Auth",q:"Explain the OAuth 2.0 Authorization Code flow with PKCE step by step.",h:"Client generates code_verifier, hashes to code_challenge (S256), sends in auth request → user authenticates → auth code returned → exchange code + code_verifier for token → server hashes verifier and compares. PKCE prevents interception attack. Mandatory for public clients."},
+  {t:"mid",topic:"Auth",q:"What is OpenID Connect? How does it differ from OAuth 2.0?",h:"OIDC = identity layer on OAuth 2.0. Adds id_token (JWT with user identity claims), UserInfo endpoint, standard scopes (openid, profile, email). OAuth 2.0 = authorization only. OIDC = authentication + authorization. Know when to use each."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the saga pattern? When would you use it in integration?",h:"Sequence of local transactions coordinated via events/messages for distributed transactions without 2PC. Choreography (event-driven, loose coupling) vs Orchestration (central coordinator, easier to monitor). Use when ACID across services is impractical."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the outbox pattern and what problem does it solve?",h:"Persist event to DB outbox table in same transaction as business data, then relay to broker asynchronously. Solves dual-write problem — guarantees event published if-and-only-if DB transaction commits. Critical for event-driven reliability."},
+  {t:"mid",topic:"API Design",q:"What is GraphQL? What are its advantages and disadvantages compared to REST?",h:"Single endpoint, clients specify exact data shape. Pros: no over/under-fetching, strongly typed schema, introspection. Cons: complex caching, N+1 query problem, introspection enables schema enumeration, higher gateway overhead. Not always better than REST."},
+  {t:"mid",topic:"Messaging",q:"What is Kafka? Explain topics, partitions, consumer groups, and offsets.",h:"Distributed commit log. Topics → partitions (parallelism). Consumer group = consumers sharing partition assignment (each partition to one member). Offset = position in partition. Consumers commit offsets for at-least-once. Reset offset for replay."},
+  {t:"mid",topic:"Messaging",q:"What is the difference between Kafka and RabbitMQ? When would you choose each?",h:"Kafka = high-throughput log, replay, event sourcing, stream processing. RabbitMQ = flexible routing (exchanges), lower latency, traditional queue semantics, built-in dead-lettering. Kafka for event streaming/replay. RabbitMQ for task queues and complex routing."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the scatter-gather pattern in integration? Give an example.",h:"Fan request out to multiple recipients in parallel (scatter), aggregate all responses into single composite response (gather). E.g., product details → fan out to inventory, pricing, reviews services simultaneously → aggregate into single response within latency budget."},
+  {t:"mid",topic:"Error Handling",q:"What is the bulkhead pattern? How does it prevent cascading failures?",h:"Isolate components into separate resource pools so failure in one doesn't exhaust resources for others. E.g., separate thread pools per backend service. If backend A is slow, only its pool exhausts — backend B unaffected. Named after ship watertight compartments."},
+  {t:"mid",topic:"API Design",q:"What is rate limiting and throttling? What are common implementation strategies?",h:"Rate limiting: hard cap (429 if exceeded). Throttling: slow processing gracefully. Strategies: token bucket (bursts allowed), leaky bucket (smooth output), fixed window, sliding window. Know what to do on limit hit — queue, reject, or degrade gracefully."},
+  {t:"mid",topic:"Security",q:"What is CORS and how do you handle it at the API gateway layer?",h:"Browser cross-origin security. Server must allow via Access-Control-* headers. Preflight OPTIONS must be handled. Gateway should add CORS headers centrally. Never wildcard origin with credentials. Validate Origin header strictly against allowlist."},
+  {t:"mid",topic:"Data Formats",q:"What is Protocol Buffers (Protobuf)? How does it compare to JSON?",h:"Binary serialization, schema-first (.proto files), strongly typed. Smaller payload, faster serialization than JSON. Not human-readable. Used in gRPC. JSON better for external/public APIs, Protobuf for internal high-throughput service-to-service."},
+  {t:"mid",topic:"API Design",q:"What is gRPC? When is it preferable over REST?",h:"RPC framework using HTTP/2 + Protobuf. Pros: streaming (unary, server, client, bidirectional), strongly typed, multiplexed connections, auto-generated clients. Preferred for internal microservice-to-microservice, low latency, streaming scenarios."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the canonical data model pattern and why is it used in enterprise integration?",h:"Single common data format all systems translate to/from. Reduces N×M mappings to N×2. Enables system decoupling — adding new system only requires one adapter. Common in ESB-style architectures. Critical for enterprises with many integrated systems."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the adapter/anti-corruption layer pattern in integration?",h:"Adapter = translates one interface to another. Anti-corruption layer (DDD) = isolates your domain model from external system's model. Prevents external system's quirks polluting your internal model. Essential for legacy system integration."},
+  {t:"mid",topic:"Observability",q:"What is distributed tracing? How do tools like Jaeger or Zipkin work?",h:"Propagates trace context (trace ID + span ID) across service calls. Each service records a span. Jaeger/Zipkin collect and visualize trace trees. W3C Trace Context (traceparent header) is the standard. Enables pinpointing latency across service hops."},
+  {t:"mid",topic:"CI/CD",q:"How do you test integration flows? What types of testing apply?",h:"Unit testing transformations. Contract testing (Pact) for API consumer/provider compatibility. Integration testing with real or stubbed backends (WireMock). End-to-end in staging. Performance testing (Gatling/k6). Smoke tests post-deployment."},
+  {t:"mid",topic:"Security",q:"What are common API security threats? Map each to a mitigation.",h:"Injection (schema validation), broken auth (OAuth/JWT), excessive data exposure (response filtering), rate limiting bypass (gateway throttling), SSRF (URL validation), security misconfiguration (hardened gateway defaults), mass assignment (input whitelisting)."},
+  {t:"mid",topic:"Messaging",q:"What is exactly-once delivery and how is it approached in messaging systems?",h:"Extremely hard end-to-end. Kafka: exactly-once via idempotent producer + transactional API. For most systems: at-least-once + idempotent consumer = effective exactly-once. Must distinguish broker guarantee from end-to-end guarantee."},
+  {t:"mid",topic:"Data Formats",q:"What is Avro? What role does a schema registry play?",h:"Avro = binary format. Schema registry (Confluent) = central store for schemas. Enables schema evolution with compatibility rules (backward, forward, full). Critical for Kafka-based event pipelines. Prevents consumers breaking when schemas evolve."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the webhook pattern? How does it differ from polling?",h:"Webhook = server pushes event to registered callback. Polling = client repeatedly asks. Webhooks reduce latency and load. Considerations: HMAC signature verification, retry logic, fan-out, consumer availability, timeouts."},
+  {t:"mid",topic:"Architecture",q:"What is the difference between an ESB and an API Gateway?",h:"ESB = heavy orchestration, transformation, routing middleware, traditionally on-prem, complex config. API Gateway = lightweight, north-south traffic focus, security, rate limiting, developer experience. Modern trend: thin gateway + smart services."},
+  {t:"mid",topic:"CI/CD",q:"What is configuration-as-code in integration? Why does it matter?",h:"All integration config (routes, policies, mappings, env properties) in version control. Enables reproducible deployments, peer review, rollback, CI/CD automation. Prevents config drift between environments. Non-negotiable for professional integration engineering."},
+  {t:"mid",topic:"Architecture",q:"What is event-driven architecture? What are its trade-offs vs request-response?",h:"Systems communicate via async events through a broker. Pros: loose coupling, scalability, resilience. Cons: eventual consistency, harder to debug, complex event ordering, schema governance needed. Request-response better for queries needing immediate consistent response."},
+  {t:"mid",topic:"Security",q:"What is API key management? What are its limitations compared to OAuth?",h:"API keys = simple shared secret, easy to implement, hard to rotate, no user context, no scopes, long-lived. OAuth = delegated access, scoped, short-lived tokens, refresh tokens. API keys for simple M2M. OAuth for user-delegated and fine-grained access."},
+  {t:"mid",topic:"Observability",q:"What is structured logging? Why is it preferred over plain text logs in integration?",h:"JSON-formatted log entries with consistent fields (timestamp, level, correlation_id, service, message). Machine-parseable. Enables log aggregation, filtering, alerting in ELK/Splunk. Plain text logs are unmanageable at scale in complex integration platforms."},
+  {t:"mid",topic:"Integration Patterns",q:"What is the competing consumers pattern? How does it achieve scalability?",h:"Multiple consumer instances reading from same queue. Each message processed by exactly one. Enables horizontal scaling. Must handle: idempotency (duplicate delivery), shared state (external store), message locking/visibility timeout."},
+  // ADVANCED
+  {t:"adv",topic:"Architecture",q:"What is the strangler fig pattern and how would you apply it to a legacy integration migration?",h:"Gradually replace monolith by building new capabilities alongside it, routing traffic incrementally to new system. Use API gateway as traffic router. Old system strangled as new takes over piece by piece. Zero big-bang cutover risk. Define per-domain migration waves."},
+  {t:"adv",topic:"Architecture",q:"What is service mesh and how does it relate to API gateway? Are they complementary or competing?",h:"Service mesh (Istio, Linkerd) = east-west traffic between services, mTLS, observability at sidecar level. API gateway = north-south, external-facing, auth, rate limiting, API catalog. They are complementary — gateway for edge, mesh for internal. Not competing."},
+  {t:"adv",topic:"Security",q:"What is zero-trust architecture? How does it fundamentally change integration design?",h:"Never trust, always verify — no implicit trust based on network location. Every service call must be authenticated. Short-lived credentials. Continuous verification. Integration must propagate identity through the call chain, not just validate at edge."},
+  {t:"adv",topic:"Messaging",q:"How do you handle message ordering guarantees in distributed messaging? What are the trade-offs?",h:"Kafka: ordering within a partition (use same partition key for ordered events). RabbitMQ: single consumer for strict ordering. Global ordering = massive throughput sacrifice. Design for idempotency instead of strict global ordering where possible."},
+  {t:"adv",topic:"Architecture",q:"What is CQRS and how does it affect integration design?",h:"Separate write model (commands) from read model (queries). Write side publishes events; read side builds projections. Integration must handle both paths differently — command bus for writes, event stream for read model updates. Eventual consistency is inherent."},
+  {t:"adv",topic:"Architecture",q:"What is event sourcing? How does it differ from traditional state-based storage?",h:"Store sequence of events (facts) rather than current state. State reconstructed by replaying events. Enables full audit trail, temporal queries, event replay. Integration implication: events are the integration contract, schema evolution is critical."},
+  {t:"adv",topic:"Security",q:"Explain token introspection vs local JWT validation. When would you choose each?",h:"Local validation = fast, no network, cannot detect revoked tokens. Introspection = slower, handles revocation. Hybrid: local validate first for throughput, introspect for sensitive operations (payments, data access). Trade-off is latency vs security."},
+  {t:"adv",topic:"CI/CD",q:"What is API contract testing (e.g., Pact)? How does it fit into a CI/CD pipeline?",h:"Consumer defines expectations; provider verifies it fulfills them. Pact broker stores contracts. In CI: consumer publishes contract on build, provider verifies in its pipeline. Prevents breaking changes from reaching production without consumer notification."},
+  {t:"adv",topic:"Messaging",q:"What is backpressure and how do you handle it in a high-throughput integration pipeline?",h:"Producer sends faster than consumer can process. Solutions: bounded queues (block or drop), reactive streams (consumer signals capacity), rate limiting producer, horizontal scaling of consumers. Unhandled backpressure causes OOM or message loss."},
+  {t:"adv",topic:"Architecture",q:"How would you design a multi-tenant integration platform? What are the isolation considerations?",h:"Tenant isolation at: data (separate schemas/DBs), compute (separate instances vs shared with quotas), network (separate namespaces), config (tenant-specific routing). Trade-off between cost efficiency and blast radius. Auth must propagate tenant context through all hops."},
+  {t:"adv",topic:"CI/CD",q:"How would you implement a blue-green or canary deployment strategy for an integration service?",h:"Blue-green: two identical environments, switch traffic at load balancer. Canary: route small % to new version, monitor error rates, gradually increase. Integration-specific: ensure backward-compatible message schemas during transition. Handle in-flight messages on old version."},
+  {t:"adv",topic:"Observability",q:"What is the RED method vs USE method for integration service monitoring?",h:"RED (Requests, Errors, Duration) = for services/APIs — track request rate, error rate, latency percentiles. USE (Utilization, Saturation, Errors) = for infrastructure resources. Use RED for API SLOs, USE for capacity planning. Both needed."},
+  {t:"adv",topic:"Architecture",q:"How would you design for idempotency in an integration API that processes financial transactions?",h:"Require idempotency key (client UUID) on every request. Store key + result in persistent store (DB/Redis). On duplicate: return stored result without reprocessing. Atomic check-and-store to prevent race conditions. TTL on keys. Audit every decision."},
+  {t:"adv",topic:"Data Formats",q:"What is schema evolution and how do you manage backward/forward compatibility?",h:"Backward compatible = new schema reads old data (add optional fields). Forward compatible = old schema reads new data (remove/add optional). Full = both directions. Schema registry enforces rules. Critical for Kafka event streams — breaking schema = broken consumers."},
+  {t:"adv",topic:"Architecture",q:"What is the sidecar pattern and how is it used in integration?",h:"Deploy auxiliary process alongside main service for cross-cutting concerns (logging, tracing, auth, secret injection). Examples: Envoy proxy, Vault agent, Datadog agent. Decouples integration concerns from business logic without code changes."},
+  {t:"adv",topic:"Messaging",q:"How do you handle poison messages in a production messaging system?",h:"Message always fails processing. Strategies: max retry count + DLQ routing, DLQ monitoring + alerting, manual reprocessing tooling, circuit breaker per message type, schema validation before queue admission. Never let poison messages block consumer indefinitely."},
+  {t:"adv",topic:"Security",q:"What is secret management in integration? How do you handle credential rotation without downtime?",h:"Use vault (HashiCorp Vault, AWS Secrets Manager) for dynamic secrets. Integration pulls short-lived credentials at runtime. Rotation: generate new, update vault, integration picks up on next lease expiry. Zero-downtime if old credential stays valid during transition window."},
+  {t:"adv",topic:"API Design",q:"What is the difference between synchronous request-response and async request-acknowledge-callback?",h:"Sync = wait for result, simple but tightly coupled, timeout risk for long ops. Async = accept (202 Accepted + job ID), process in background, notify via webhook or polling. Use async for operations >2-3 seconds. Must design status API and failure notification."},
+  {t:"adv",topic:"Integration Patterns",q:"How would you design a fan-out integration where one event triggers 10 downstream systems?",h:"Pub/sub topic with 10 subscribers. Each subscriber has independent queue so slow consumer doesn't affect others. Handle partial failures — if 3 of 10 fail, DLQ + retry independently. Consider ordering, idempotency, delivery guarantees per subscriber."},
+  {t:"adv",topic:"Architecture",q:"What is AsyncAPI specification? How does it complement OpenAPI?",h:"OpenAPI equivalent for event-driven/async APIs (Kafka, AMQP, WebSocket, MQTT). Describes channels, messages, schemas, bindings. OpenAPI for sync HTTP APIs, AsyncAPI for async event APIs. Together they document a complete API landscape."},
+  {t:"adv",topic:"CI/CD",q:"What is contract-first vs code-first API development? What are the integration implications?",h:"Contract-first = design OpenAPI spec before implementation. Enables parallel dev, mock servers, early consumer feedback, gateway import. Code-first = generate spec from code, prone to poor design. Contract-first strongly preferred in integration-heavy organizations."},
+  {t:"adv",topic:"Observability",q:"What are SLIs, SLOs, and SLAs in the context of integration services?",h:"SLI = measurable indicator (latency p99, error rate). SLO = internal target (99.9% of requests <500ms). SLA = contractual commitment with consequences. Integration teams define SLOs per API/flow. Error budgets determine risk tolerance for changes."},
+  // EXPERT
+  {t:"exp",topic:"Architecture",q:"Design an event-driven integration architecture for a real-time order management system connecting 5 microservices.",h:"Event backbone (Kafka). Order service publishes OrderPlaced. Inventory, Payment, Notification, Analytics subscribe. Saga for distributed transaction. DLQ per service. Schema registry. Idempotent consumers. Outbox pattern for transactional publishing. Dead letter monitoring."},
+  {t:"exp",topic:"Architecture",q:"How would you migrate a monolithic ESB with 200 integration flows to a modern API/event-driven architecture?",h:"Inventory all flows: classify by type (sync API, async event, batch, B2B). Strangle most critical first. Introduce API gateway for sync. Kafka for event flows. Extract batch to cloud-native scheduler. Maintain canonical model. 3-year roadmap, team topology aligned to domains. Never big bang."},
+  {t:"exp",topic:"Security",q:"Design end-to-end API security for a financial services platform including external partners, internal services, and legacy backends.",h:"External: mTLS + OAuth2 client credentials. Edge gateway: JWT validation, rate limiting, threat protection. Internal: service mesh mTLS + short-lived JWT. Legacy: adapter layer with credential bridging. Secrets: Vault dynamic credentials. Audit log to SIEM. PCI scope segmentation."},
+  {t:"exp",topic:"Architecture",q:"What are the key differences between choreography and orchestration in distributed integration? When do you choose each?",h:"Choreography = services react to events, no central coordinator, loose coupling but hard to observe. Orchestration = central saga controls flow, easy to monitor but creates coupling. Orchestration for complex flows needing visibility. Choreography for simple event chains. Hybrid common in practice."},
+  {t:"exp",topic:"Observability",q:"Design an observability strategy for a complex integration platform handling 50,000 TPS across 30 services.",h:"Three pillars: metrics (Prometheus + Grafana, RED per service), logs (structured JSON → ELK, correlation ID mandatory), traces (OpenTelemetry → Jaeger). SLO dashboards per API. Anomaly detection. Alert on SLO burn rate. Synthetic monitoring for critical paths. Error budget policy."},
+  {t:"exp",topic:"Messaging",q:"How would you design a Kafka-based event streaming platform for a global enterprise with strict data residency requirements?",h:"Multi-region Kafka clusters (MirrorMaker2 with topic filtering). Data residency: per-region topics, restrict PII topic replication. Schema registry per region. Consumer groups scoped to region. Encryption at rest + in transit. Audit log of all consumer group activity."},
+  {t:"exp",topic:"CI/CD",q:"Design a fully automated CI/CD pipeline for an integration platform with 50+ integration flows and zero-downtime deployments.",h:"Git-based config store. CI: lint + unit test transformations + contract tests on PR. CD: build artifact → dev (auto) → integration test → staging → perf test → canary deploy to prod. Rollback: previous artifact redeploy. Feature flags for risky changes. IaC for infrastructure."},
+  {t:"exp",topic:"Architecture",q:"How would you design a B2B integration platform supporting EDI, REST, and SFTP for 100 trading partners?",h:"Trading partner onboarding portal. Per-partner adapter (EDI X12/EDIFACT parser, SFTP poller, REST inbound). Canonical model. Partner profile store. Acknowledgement handling (EDI 997). SLA monitoring per partner. Retry + DLQ per channel. Non-repudiation via message signing."},
+  {t:"exp",topic:"Architecture",q:"Explain how you would implement API governance at scale across an enterprise with 50 development teams.",h:"API design standards (OpenAPI-first, naming, error format). Automated linting (Spectral) + human review for external APIs. Central API catalog. Lifecycle policy (deprecation timelines). Security baseline injected centrally. Metrics-driven quality gates. Developer community + enablement, not just policing."},
+  {t:"exp",topic:"Architecture",q:"How would you design a sensitive data detection system for API responses at scale?",h:"Inline inspection at gateway: regex + ML classifiers for PII patterns. Schema-driven: flag responses returning fields classified as sensitive. Response masking policy: mask by default, explicit allowlist. Runtime anomaly: detect sudden volume increase in sensitive fields per consumer."},
+  {t:"exp",topic:"Architecture",q:"How do you approach API deprecation and sunsetting in a large ecosystem with external consumers?",h:"Sunset header (RFC 8594) in responses. Consumer usage analytics to identify active consumers. Direct communication + migration guides. Parallel run period. Hard sunset enforced at gateway. Post-sunset: return 410 Gone (never 404). Monitor for traffic on retired endpoints."},
+  {t:"exp",topic:"Architecture",q:"How do you design for privacy-by-design in an integration platform handling PII data?",h:"Data minimization (only pass what's needed). Classify PII in schema registry. Mask/pseudonymize in transit. Field-level encryption for sensitive attributes. Audit log of PII access. Data residency enforcement. Right to erasure: event tombstoning in Kafka, cascade delete in integration stores."},
+  {t:"exp",topic:"Architecture",q:"How would you build a self-healing integration system that automatically recovers from failures without human intervention?",h:"Circuit breakers per backend. Automatic DLQ retry with exponential backoff. Health-based routing (remove unhealthy backends automatically). Canary analysis triggering automatic rollback. Chaos engineering schedule to validate resilience. Runbook automation for known failure patterns."},
+  {t:"exp",topic:"Architecture",q:"Compare push-based vs pull-based integration architectures. When do you choose each?",h:"Push = source triggers on event, low latency, consumer must be available. Pull = consumer polls, source-agnostic, better for unreliable consumers, higher latency. Hybrid: push to queue (decouples availability), consumer pulls from queue. Most enterprise integration uses hybrid."},
+  {t:"exp",topic:"Architecture",q:"Design a hybrid cloud integration architecture connecting on-premise legacy systems with cloud-native services.",h:"Integration gateway layer (on-prem + cloud). VPN/Direct Connect for private connectivity. On-prem: API gateway exposing legacy as APIs. Cloud: Kafka-based hub or iPaaS. Data transfer: CDC (Debezium) for DB sync. Security: mTLS everywhere. Latency budget per integration flow."},
+  {t:"exp",topic:"Observability",q:"How would you build a real-time API analytics platform that tracks usage, SLOs, and business KPIs across all integration flows?",h:"Event pipeline: gateway emits structured access logs → Kafka → Flink for aggregation → ClickHouse/BigQuery → Grafana dashboards. Track: usage per consumer/API/method, error rates, latency percentiles, quota consumption, business events. SLO burn rate alerts. Weekly KPI reports automated."}
+];
+
+/* ===== TERM DATA ===== */
+const TERMS=[
+  {d:"Auth",c:"da",n:"OAuth 2.0",l:"Letting a third-party app access your data without giving it your password",t:"A delegated authorization framework issuing scoped, time-limited access tokens on behalf of resource owners without exposing credentials. Four grant types: Authorization Code, Client Credentials, Device, ROPC (avoid).",i:"We use OAuth 2.0 client credentials flow for M2M auth — each service holds a client_id and rotated client_secret and exchanges them for a scoped access token with a 15-minute expiry."},
+  {d:"Auth",c:"da",n:"PKCE",l:"An extra step stopping someone from stealing your login code mid-way",t:"Proof Key for Code Exchange — extends Authorization Code flow with code_verifier and code_challenge to prevent authorization code interception. Mandatory for public clients per OAuth 2.1.",i:"All our SPA and mobile clients enforce PKCE — the S256 code_challenge is sent in the auth request and the code_verifier is verified on token exchange, eliminating code interception risk."},
+  {d:"Auth",c:"da",n:"JWT",l:"A token carrying user info inside it so the server can trust it without a database lookup",t:"Compact, self-contained token with three Base64URL sections: header (alg/typ), payload (claims: iss, sub, exp, aud), and signature. Validated locally without calling the auth server.",i:"The gateway performs local JWT validation — it verifies the RS256 signature against the JWKS endpoint, then checks exp, nbf, iss, and aud claims before forwarding to the backend."},
+  {d:"Auth",c:"da",n:"JWKS",l:"A public list of keys the auth server uses to sign tokens so anyone can verify them",t:"JSON Web Key Set — a JSON document at a well-known URL containing public keys for JWT signature verification. Enables stateless token validation without calling the auth server on every request.",i:"The gateway fetches JWKS from the auth server's discovery endpoint at startup, caches with a 5-minute TTL, and refreshes on key ID mismatch to handle key rotation transparently."},
+  {d:"Auth",c:"da",n:"Token Introspection",l:"Asking the auth server directly whether a token is still valid right now",t:"RFC 7662 — an endpoint accepting a token and returning its active status and metadata. Required for detecting tokens revoked before their expiry.",i:"For payment endpoints we use token introspection instead of local validation — we accept the extra 20ms round-trip to guarantee real-time detection of revoked tokens."},
+  {d:"Auth",c:"da",n:"Refresh Token",l:"A long-lived pass that gets you a new short-lived token without logging in again",t:"Long-lived credential for obtaining new access tokens after expiry without re-authenticating. Should be rotated on use with reuse detection to limit blast radius of theft.",i:"We implemented refresh token rotation with reuse detection — if a consumed refresh token is presented again, we revoke the entire token family immediately as a compromise signal."},
+  {d:"Auth",c:"da",n:"OAuth Scopes",l:"Specific permissions on a token — like a key that only opens certain doors",t:"OAuth 2.0 granular permission mechanism. Clients request minimum needed scopes; auth server issues only approved scopes; resource servers enforce scope per operation.",i:"We use resource-based scopes — read:orders and write:payments — so each API client is issued only the permissions its function requires, enforcing least privilege at the token level."},
+  {d:"Auth",c:"da",n:"OpenID Connect",l:"OAuth 2.0 that also tells you who the user is, not just what they can do",t:"Identity layer on top of OAuth 2.0. Adds id_token (JWT with identity claims), UserInfo endpoint, standard scopes (openid, profile, email) for authentication use cases.",i:"We use OIDC for customer auth — the id_token carries identity claims for the UI while the access token carries API authorization scopes, keeping the two concerns cleanly separated."},
+  {d:"Auth",c:"da",n:"mTLS",l:"Both sides prove who they are using certificates — not just the server",t:"Mutual TLS — both parties present and verify X.509 certificates. Provides bidirectional cryptographic authentication. Used for service-to-service and B2B API security.",i:"All partner integrations enforce mTLS — each partner presents a client certificate signed by our issuing CA, and the gateway rejects any connection from an unregistered certificate fingerprint."},
+  {d:"Auth",c:"da",n:"SAML 2.0",l:"The older XML-based single sign-on standard used in enterprise systems",t:"Security Assertion Markup Language — XML-based federation protocol for exchanging auth data between Identity Provider and Service Provider. Widely used in enterprise SSO.",i:"The internal admin portal uses SAML 2.0 SSO — employees authenticate against the corporate IdP, which issues a signed XML assertion that the portal validates against the IdP's public cert."},
+  {d:"Auth",c:"da",n:"Client Credentials Flow",l:"Machine-to-machine login where the app itself gets a token with no user involved",t:"OAuth 2.0 grant for server-to-server communication. Client authenticates with client_id and client_secret directly with auth server and receives a scoped access token.",i:"Internal service-to-service calls use client credentials flow — each service has its own identity scoped to the APIs it consumes, with secrets rotated automatically via our Vault pipeline."},
+  {d:"Auth",c:"da",n:"Authorization Code Flow",l:"Standard login where the user gets a temporary code swapped for a token",t:"OAuth 2.0 grant for user-delegated access. Auth server issues short-lived code after user consent; client exchanges it via back-channel for tokens.",i:"The customer portal uses Authorization Code flow with PKCE — the token exchange happens server-side so tokens never appear in the browser URL or history."},
+  {d:"Auth",c:"da",n:"Federation",l:"Trusting another organization's login so their users can access your system",t:"Cross-organizational trust between identity providers using SAML, OIDC, or WS-Federation, allowing users from one IdP to access resources protected by another.",i:"We federated with our partner's Azure AD using OIDC — their users authenticate against their own IdP and receive a token our gateway trusts via cross-validated JWKS, with no separate account provisioning."},
+  {d:"Auth",c:"da",n:"DPoP",l:"Tying a token to a specific device so stealing the token alone is not enough to use it",t:"Demonstration of Proof of Possession (RFC 9449) — binds access tokens to a client's ephemeral key pair. Each request carries a DPoP proof JWT signed with the private key.",i:"We're migrating high-value clients to DPoP-bound tokens — even if a Bearer token is exfiltrated from memory, it cannot be replayed without the private key that never leaves the client."},
+  {d:"Auth",c:"da",n:"SPIFFE / SPIRE",l:"A system that automatically gives each running service its own identity certificate",t:"SPIFFE = Secure Production Identity Framework. SPIRE = runtime. Issues short-lived X.509 SVIDs to workloads for cryptographic service identity without static credentials.",i:"In our Kubernetes environment SPIRE issues each pod an SVID rotated every hour — enabling mTLS between all services without any manually managed service accounts."},
+  {d:"Integration",c:"di",n:"API Gateway",l:"The front door for all your APIs handling security, routing, and monitoring centrally",t:"Single entry point for API consumers handling cross-cutting concerns: authentication, authorization, rate limiting, routing, transformation, and observability at the edge.",i:"The API gateway is our primary policy enforcement point — backends are isolated from the internet and all auth, rate limiting, and logging are enforced centrally without each service duplicating that logic."},
+  {d:"Integration",c:"di",n:"Mediation",l:"Transforming or translating a message as it passes through the middle layer",t:"The process of transforming, enriching, routing, or protocol-translating messages between consumer and provider. Includes transformation, header manipulation, protocol bridging, data enrichment.",i:"The gateway mediates between REST consumers and our legacy SOAP backend — it transforms the JSON request to a SOAP envelope, forwards it, then maps the XML response back to our canonical JSON model."},
+  {d:"Integration",c:"di",n:"Content-Based Routing",l:"Looking inside the message to decide where to send it",t:"A messaging pattern where routing decisions are driven by message content — payload fields, headers, or properties — rather than static configuration.",i:"We implemented content-based routing — high-value transactions route to enhanced fraud screening while standard transactions bypass it, decided by the amount field in the payload."},
+  {d:"Integration",c:"di",n:"Canonical Data Model",l:"One shared data format all your systems translate to and from",t:"Single agreed-upon data model used as common language between integrated systems. Each system maps to/from it, reducing N×M point-to-point mappings to N×2.",i:"We introduced a canonical order model — every system integration only requires one adapter to the canonical format, so adding a new ERP requires no changes to any existing integration."},
+  {d:"Integration",c:"di",n:"Protocol Translation",l:"Converting from one communication format to another — like SOAP to REST",t:"Transforming messages between different protocols at the integration layer — REST to SOAP, HTTP to JMS, gRPC to REST — without requiring changes to consumer or provider.",i:"The gateway handles protocol translation for legacy consumers — they submit SOAP, the gateway translates to internal REST, and the response path reverses the transformation transparently."},
+  {d:"Integration",c:"di",n:"Scatter-Gather",l:"Sending to multiple services in parallel and merging all replies into one response",t:"Integration pattern fanning a request to multiple recipients in parallel, then aggregating all responses into a single composite response.",i:"The product details endpoint uses scatter-gather — it fans out to inventory, pricing, and reviews services concurrently, aggregates the responses, and returns a single payload within 150ms."},
+  {d:"Integration",c:"di",n:"Splitter Pattern",l:"Breaking one big message into smaller individual messages",t:"Messaging pattern decomposing a single composite message into individual messages, each routed and processed independently.",i:"Bulk order imports hit the splitter — the incoming file is decomposed into individual order messages, each published to the order topic independently for parallel downstream handling."},
+  {d:"Integration",c:"di",n:"Aggregator Pattern",l:"Collecting multiple separate messages and combining them back into one",t:"Stateful messaging pattern collecting correlated messages and combining into a single message when a completion condition is met. Requires correlation key and timeout handling.",i:"After splitting a batch shipment, the aggregator correlates delivery confirmations by batch ID and emits a single batch-complete event only when all consignments are confirmed."},
+  {d:"Integration",c:"di",n:"Dead Letter Queue",l:"A holding area for messages that keep failing so they don't block everything else",t:"Queue receiving messages exceeding max retry count or failing with unrecoverable errors. Prevents poison messages from blocking consumer progress.",i:"Every consumer has a DLQ with a PagerDuty alert — if any message lands there it fires within 2 minutes so the team can investigate and replay after fixing the root cause."},
+  {d:"Integration",c:"di",n:"Idempotency",l:"Doing the same operation multiple times gives the same result as once",t:"A property where executing an operation multiple times with the same input produces the same outcome as a single execution. Critical for safe retry logic.",i:"All mutation endpoints require an idempotency key — we store the key and result in Redis with a 24-hour TTL so network retries never cause duplicate charges or double-booked inventory."},
+  {d:"Integration",c:"di",n:"Circuit Breaker",l:"Automatically stopping calls to a broken service before failure spreads",t:"Resilience pattern with closed (normal), open (blocking after threshold), half-open (testing recovery) states. Prevents cascading failures when a downstream service degrades.",i:"We wrapped each backend call in a circuit breaker — after 5 failures in 10 seconds it opens for 30 seconds and returns a cached fallback, giving the backend recovery time."},
+  {d:"Integration",c:"di",n:"Exponential Backoff",l:"Waiting longer each time you retry to avoid hammering a struggling service",t:"Retry strategy where wait time grows exponentially (1s, 2s, 4s, 8s) with jitter to prevent synchronized retries from multiple clients hitting a recovering service simultaneously.",i:"Transient backend failures trigger retries with exponential backoff — starting at 1 second, doubling to a 32-second cap, with ±20% jitter to prevent thundering herd."},
+  {d:"Integration",c:"di",n:"Request Enrichment",l:"Adding extra data to a request before passing it on to the backend",t:"Integration pattern where the gateway augments an incoming request with data from another source — cache, database, or another service — before routing.",i:"The order routing policy enriches every inbound request — it looks up the customer's region and priority tier from cache and injects them as headers before forwarding to the routing engine."},
+  {d:"Integration",c:"di",n:"Anti-Corruption Layer",l:"A wrapper stopping a messy external system's model from leaking into your clean system",t:"DDD pattern providing a translation layer between your domain model and an external system. Prevents external concepts from polluting your internal model.",i:"We built an anti-corruption layer between our order domain and the legacy ERP — all ERP-specific field names and codes are translated at the boundary so no ERP concept appears inside our domain."},
+  {d:"Integration",c:"di",n:"Webhook",l:"The external system calls you when something happens instead of you constantly polling",t:"HTTP callback mechanism where a server POSTs to a registered URL when an event occurs, enabling event-driven integration without polling.",i:"We replaced 5-minute polling with webhooks — the courier platform POSTs a signed event within seconds of a status change, and we verify the HMAC-SHA256 signature before processing."},
+  {d:"Security",c:"ds",n:"BOLA / IDOR",l:"Accessing someone else's data just by changing an ID in the URL",t:"Broken Object Level Authorization (OWASP API1) — failure to verify the authenticated user owns or has permission to access the specific resource requested.",i:"We prevent BOLA by enforcing ownership checks on every resource query — the DB query filters by both resource ID and authenticated user's subject claim, and any mismatch returns a 403."},
+  {d:"Security",c:"ds",n:"BFLA",l:"A regular user calling an admin function they shouldn't be allowed to reach",t:"Broken Function Level Authorization (OWASP API5) — insufficient access control allowing lower-privileged users to invoke operations intended for higher-privileged roles.",i:"We address BFLA with role enforcement at the gateway — every endpoint has a required role annotation in the OpenAPI spec, and the gateway rejects requests where the token role doesn't match."},
+  {d:"Security",c:"ds",n:"Mass Assignment",l:"The API accepting hidden fields allowing users to change things they shouldn't control",t:"Vulnerability where an API binds all request body fields to a data model including privileged fields, allowing privilege escalation.",i:"We prevent mass assignment using explicit input DTOs with an allowlist of accepted fields — the application layer never auto-maps the full request body to the domain object."},
+  {d:"Security",c:"ds",n:"Rate Limiting",l:"Capping how many requests someone can make in a given time period",t:"Gateway control enforcing a maximum request count per consumer per time window. Returns HTTP 429 when exceeded. Protects against DoS, brute force, and credential stuffing.",i:"We apply tiered rate limiting — IP-level at the WAF, client-level at the gateway (1000 req/min), and operation-level on sensitive endpoints like authentication (5 attempts/min per account)."},
+  {d:"Security",c:"ds",n:"Threat Modeling",l:"Thinking through who might attack your system and how before you build it",t:"Structured process for identifying and prioritizing security threats using STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege).",i:"We run a STRIDE threat model on every new API before development — the output is a set of abuse cases that feed directly into the security acceptance criteria for that sprint."},
+  {d:"Security",c:"ds",n:"Zero Trust",l:"Never assume something is safe just because it's inside your network",t:"Security model: never trust, always verify. Every request authenticated and authorized regardless of network location. No implicit trust based on IP or network zone.",i:"We adopted zero trust for internal service communication — every east-west call carries a short-lived JWT validated by the receiving service, so network adjacency grants no implicit access."},
+  {d:"Security",c:"ds",n:"SSRF",l:"Tricking the server into making requests to internal systems on your behalf",t:"Server-Side Request Forgery — attacker controls a URL parameter causing the server to request unintended internal destinations: metadata APIs, internal services, local paths.",i:"We mitigate SSRF on our webhook endpoint by validating submitted URLs against a domain allowlist and blocking any URL resolving to RFC-1918 private IP ranges before the outbound request."},
+  {d:"Security",c:"ds",n:"Forward Secrecy",l:"Each TLS session uses a throwaway key so old traffic can't be decrypted if the main key leaks",t:"TLS property via ECDHE/DHE key exchange ensuring session keys are ephemeral. Compromise of long-term private key does not expose past session traffic.",i:"All gateway TLS configurations mandate ECDHE cipher suites — we disabled RSA key exchange so that obtaining our certificate's private key gives no access to past recorded sessions."},
+  {d:"Security",c:"ds",n:"Request Signing",l:"Putting a tamper-proof seal on a request so the receiver knows it hasn't been changed",t:"Signing request components (method, path, timestamp, body hash) with a shared secret or private key. Server verifies signature for integrity and authenticity.",i:"Partner API calls use HMAC-SHA256 request signing — we reject any request where the signature is invalid or the timestamp is older than 5 minutes to prevent replay attacks."},
+  {d:"Security",c:"ds",n:"Secret Management",l:"Storing passwords and credentials in a vault instead of hardcoding them",t:"Secure storage, access control, auditing, and rotation of credentials using HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault.",i:"All service credentials live in Vault with dynamic secret leases — services fetch short-lived credentials at startup and Vault rotates them automatically before expiry."},
+  {d:"Security",c:"ds",n:"Data Masking",l:"Hiding sensitive parts of data in logs so they can't be read if logs are exposed",t:"Redacting or obscuring sensitive data (PAN, PII, credentials) in logs, traces, and audit records while preserving enough context for debugging.",i:"We apply data masking at the gateway logging layer — PAN fields show only the last 4 digits, and Authorization headers are explicitly excluded from transaction logs."},
+  {d:"Security",c:"ds",n:"Least Privilege",l:"Only give each system exactly the permissions it needs and nothing more",t:"Security principle: every component, user, or service receives only minimum permissions necessary, minimizing blast radius of any compromise.",i:"We enforce least privilege through scope design — each API client is issued a token scoped to only the operations it requires, and service accounts have read-only access to only the tables they need."},
+  {d:"Security",c:"ds",n:"DAST",l:"Automatically attacking a running API to find security holes",t:"Dynamic Application Security Testing — automated security testing against a deployed API by sending malicious inputs and analyzing responses. No source code access required.",i:"Schemathesis runs DAST against every service in staging on every deployment — it generates attack cases from the OpenAPI spec and checks for injection, auth bypass, and schema violations."},
+  {d:"Security",c:"ds",n:"OWASP API Top 10",l:"The official list of the 10 most dangerous ways APIs get attacked",t:"OWASP's list of critical API security risks (2023): BOLA, Broken Auth, Broken Object Property Level AuthZ, Unrestricted Resource Consumption, BFLA, Unsafe Business Flows, SSRF, Misconfiguration, Improper Inventory, Unsafe API Consumption.",i:"Our API security review checklist maps to the OWASP API Top 10 — every API must demonstrate a control for each category before being approved for production."},
+  {d:"Messaging",c:"dm",n:"Message Broker",l:"A middleman reliably delivering messages between senders and receivers",t:"Infrastructure decoupling producers from consumers by receiving, storing, and routing messages. Provides buffering, delivery guarantees, and fan-out. Examples: Kafka, RabbitMQ, IBM MQ.",i:"Introducing a message broker between the order service and fulfilment decoupled their availability — a fulfilment outage no longer blocks order acceptance, it just builds a queue that drains on recovery."},
+  {d:"Messaging",c:"dm",n:"Topic vs Queue",l:"Queue = one consumer gets the message. Topic = every subscriber gets their own copy",t:"Queue: point-to-point, each message to one consumer. Topic: pub-sub, each message delivered independently to all subscribers.",i:"Order events go to a Kafka topic — fulfilment, analytics, and notifications consume every event independently without competing, unlike a queue where only one service would receive each message."},
+  {d:"Messaging",c:"dm",n:"Consumer Group",l:"A team of workers sharing the job of reading from a stream",t:"In Kafka, a named group of consumers collectively consuming a topic. Each partition assigned to exactly one member, enabling parallel processing with per-partition ordering.",i:"We scaled order processing by adding consumers to the consumer group — Kafka rebalanced partition assignments automatically, increasing throughput without any code changes."},
+  {d:"Messaging",c:"dm",n:"Offset",l:"A bookmark remembering exactly how far along a message stream each consumer has read",t:"In Kafka, a sequential integer identifying a message's position within a partition. Consumers commit offsets to track progress and can reset to replay from any earlier point.",i:"When we deployed the new analytics service, we reset its consumer offset to the beginning of the topic to backfill 90 days of historical events without any pipeline changes."},
+  {d:"Messaging",c:"dm",n:"At-Least-Once Delivery",l:"The message is guaranteed to arrive but might come more than once",t:"Delivery guarantee ensuring every message is delivered at least once. Duplicates possible after consumer crashes before committing offset. Requires idempotent consumers.",i:"Our pipeline uses at-least-once delivery — consumers are idempotent using event ID as deduplication key in Redis, so processing a duplicate produces the same result as the first execution."},
+  {d:"Messaging",c:"dm",n:"Schema Registry",l:"A central store tracking message structure so producers and consumers always agree",t:"Service storing and managing message schemas (Avro/Protobuf/JSON) and enforcing compatibility rules. Prevents consumers breaking when schemas evolve.",i:"We use Confluent Schema Registry with backward compatibility enforced — producers can only add optional fields, so all consumers are automatically protected from breaking schema changes."},
+  {d:"Messaging",c:"dm",n:"Backpressure",l:"The consumer signalling the producer to slow down because it can't keep up",t:"Flow control mechanism where slow consumers signal producers to reduce send rate. Prevents memory exhaustion and message loss in high-throughput pipelines.",i:"We handle backpressure with bounded queues — at 80% capacity the upstream producer blocks rather than dropping messages, creating natural flow control without data loss."},
+  {d:"Messaging",c:"dm",n:"Poison Message",l:"A message that crashes your consumer every single time it tries to process it",t:"Message causing consumer failure on every processing attempt. Blocks queue progress indefinitely if not isolated to DLQ.",i:"Our DLQ alert fired three times for the same message ID — we identified a poison message from a schema migration issue, paused the consumer, fixed the processor, and replayed from the DLQ."},
+  {d:"Messaging",c:"dm",n:"Outbox Pattern",l:"Write the event to your database first, then publish reliably so you never lose an event",t:"Pattern ensuring atomicity between DB write and event publication. Event persisted to outbox table in same transaction as business data, then relayed to broker asynchronously.",i:"We use the outbox pattern — the order and its domain event are committed atomically, then Debezium reads the outbox via CDC and publishes to Kafka, guaranteeing no lost events even under failure."},
+  {d:"Messaging",c:"dm",n:"Pub/Sub",l:"Publishers send to a channel and every subscriber automatically gets a copy",t:"Publish-Subscribe pattern — producers emit events to a topic without knowledge of consumers. Each subscriber receives all events independently.",i:"Migrating from direct REST calls to pub-sub removed all coupling between the order service and its six consumers — adding a new consumer required zero changes to the order service."},
+  {d:"Messaging",c:"dm",n:"Event Sourcing",l:"Saving every change that happened instead of just the current state",t:"Architectural pattern storing state changes as an immutable sequence of events. Current state derived by replaying events. Enables full audit trail and event replay.",i:"The account balance service uses event sourcing — every debit and credit is an immutable event, and the balance is a projection summed from the log, giving regulators a complete immutable audit trail."},
+  {d:"Messaging",c:"dm",n:"Exactly-Once Semantics",l:"A message is processed exactly one time — not zero, not twice",t:"Strongest delivery guarantee — each message processed exactly once end-to-end. Kafka: idempotent producers + transactions + idempotent consumers. Extremely difficult across system boundaries.",i:"For payment processing we use Kafka transactions with idempotent producers and event-ID deduplication on the consumer — giving us effective exactly-once processing across the pipeline."},
+  {d:"Architecture",c:"dr",n:"API-First Design",l:"Design the API contract before writing any code",t:"Development approach where the OpenAPI specification is defined and reviewed before implementation. Enables parallel development, mock servers, early consumer feedback.",i:"We adopted API-first — the OpenAPI spec is reviewed and approved before any code is written, allowing frontend and backend teams to develop in parallel against a running mock server."},
+  {d:"Architecture",c:"dr",n:"Strangler Fig",l:"Gradually replacing an old system piece by piece while keeping it running",t:"Migration pattern building new functionality alongside legacy, incrementally routing traffic to it. Legacy decommissioned once it handles no remaining traffic.",i:"We used strangler fig to migrate from the monolith — the gateway routes each endpoint to either legacy or new microservice, letting us migrate one domain at a time with instant rollback capability."},
+  {d:"Architecture",c:"dr",n:"Service Mesh",l:"An infrastructure layer automatically handling all networking between microservices",t:"Infrastructure layer (Istio, Linkerd) managing east-west service communication: mTLS, load balancing, circuit breaking, tracing, traffic shaping via sidecar proxies.",i:"We deployed Istio as our service mesh — it enforces mTLS between all pods automatically and gives us distributed tracing across all calls without any application code changes."},
+  {d:"Architecture",c:"dr",n:"Sidecar Pattern",l:"A helper process alongside your service handling logging, security, and proxying",t:"Design pattern deploying an auxiliary process alongside the main service to handle cross-cutting concerns without modifying application code.",i:"We use the Vault Agent sidecar — it authenticates to Vault and writes short-lived credentials to a shared volume, so the application reads fresh credentials at startup without handling renewal logic."},
+  {d:"Architecture",c:"dr",n:"CQRS",l:"Separating the write side from the read side so each can be optimized independently",t:"Command Query Responsibility Segregation — separating write model (commands) from read model (queries). Enables independent scaling, storage, and optimization of each path.",i:"We implemented CQRS for the product catalog — writes go to a transactional DB while reads are served from a denormalized Elasticsearch projection, giving us sub-10ms search at high volume."},
+  {d:"Architecture",c:"dr",n:"Event-Driven Architecture",l:"Systems communicate by publishing and reacting to events instead of calling each other",t:"Architectural style where components communicate via async events through a broker. Enables loose coupling, independent scalability, and resilience.",i:"Moving to EDA removed all synchronous coupling in our order pipeline — each service reacts to domain events independently, so adding a new consumer requires zero changes to existing services."},
+  {d:"Architecture",c:"dr",n:"Saga Pattern",l:"Managing a long multi-step process where each step can be undone if something fails",t:"Pattern for distributed transactions using a sequence of local transactions coordinated via events or orchestrator, with compensating transactions for rollback.",i:"Our fulfilment uses an orchestrated saga — the coordinator manages payment, inventory reservation, and shipping, triggering compensating transactions automatically if any step fails."},
+  {d:"Architecture",c:"dr",n:"ESB vs API Gateway",l:"ESB is the old heavy orchestration bus; API Gateway is the modern lightweight entry point",t:"ESB: centralized heavyweight orchestration, on-prem. API Gateway: lightweight, edge-focused, auth/rate limiting/routing. Modern trend: dumb pipes, smart services.",i:"We're replacing the ESB with an API gateway and Kafka — moving from smart pipes with dumb services to dumb pipes with smart services, giving each team autonomy over their own integration logic."},
+  {d:"Architecture",c:"dr",n:"Bulkhead Pattern",l:"Isolating your system into compartments so one failure doesn't take everything down",t:"Resilience pattern isolating components into separate resource pools so failure in one doesn't affect others.",i:"We implemented bulkheads with per-backend connection pools — when the legacy ERP degrades and exhausts its pool, payment and CRM integrations remain completely unaffected."},
+  {d:"Architecture",c:"dr",n:"Blue-Green Deployment",l:"Two identical environments with traffic switched between them for zero-downtime deploys",t:"Deployment strategy with two identical environments. New version deploys to idle one; traffic switches after validation. Rollback is instant by switching back.",i:"Gateway changes use blue-green deployment — new policies deploy to the green group, smoke tests run, then we shift 100% of traffic in under 30 seconds with immediate rollback capability."},
+  {d:"Architecture",c:"dr",n:"Canary Deployment",l:"Releasing to a small percentage of users first to catch problems early",t:"Deployment strategy routing small traffic percentage to new version first. Metrics monitored; percentage increases if healthy, rolls back automatically on error budget breach.",i:"New API versions go through canary deployment — 5% of traffic routes to new version for 30 minutes, and if error rate exceeds our SLO threshold the pipeline auto-rolls back without human intervention."},
+  {d:"Architecture",c:"dr",n:"Idempotency Key",l:"A unique ID sent with a request so the server can safely ignore duplicates",t:"Client-generated unique identifier enabling server-side deduplication. Server stores key and result; subsequent requests with same key return cached response without reprocessing.",i:"Our payment API requires an idempotency key on every mutation — stored in Redis with 24-hour TTL so retries never result in duplicate charges."},
+  {d:"Architecture",c:"dr",n:"API Lifecycle",l:"The stages an API goes through from design to retirement",t:"Governance of an API's existence: design, develop, test, publish, deprecate, retire. Each stage has ownership, controls, and consumer communication requirements.",i:"We enforce the full API lifecycle through the API Manager — APIs move from draft to published only after security review, deprecated APIs carry a Sunset header, and retired APIs return 410 Gone."},
+  {d:"Observability",c:"do",n:"Distributed Tracing",l:"Following a single request across all the services it touches",t:"Technique tracking a request through distributed services. Each service adds a span. Tools like Jaeger/Zipkin visualize the full call tree with per-hop timing.",i:"We implemented distributed tracing with OpenTelemetry — every request gets a trace ID at the gateway propagated to all downstream services, so we can pinpoint exactly which service introduced a latency spike."},
+  {d:"Observability",c:"do",n:"Correlation ID",l:"A unique tag following a request everywhere so you can find all its logs in one search",t:"Unique identifier generated at entry point and propagated through all downstream calls via headers (X-Correlation-ID). Enables end-to-end tracing across distributed log systems.",i:"The gateway generates a UUID correlation ID for every request and injects it as X-Correlation-ID — all services log it, so a single Kibana query returns the complete cross-service log trail."},
+  {d:"Observability",c:"do",n:"Structured Logging",l:"Writing logs as machine-readable JSON so they can be searched automatically",t:"Logging where each entry is a machine-parseable JSON structure with consistent named fields. Enables aggregation, filtering, and alerting at scale in ELK/Splunk.",i:"We standardized on structured JSON logging — every log line includes service name, correlation ID, and request duration, so Kibana queries work across the entire platform without regex parsing."},
+  {d:"Observability",c:"do",n:"RED Method",l:"Measuring three key numbers: requests per second, errors, and response time",t:"Monitoring methodology for services: Rate (requests/sec), Errors (failed %), Duration (latency p50/p95/p99). Forms the basis of service-level SLO measurement.",i:"We apply RED metrics to every API endpoint — Grafana shows real-time rate, error %, and p99 latency, and SLO alerts fire when error rate exceeds 0.1% or p99 crosses our 500ms budget."},
+  {d:"Observability",c:"do",n:"SLO / SLI / SLA",l:"SLI = what you measure, SLO = your internal target, SLA = the promise to customers",t:"SLI: measurable metric (latency p99). SLO: internal target (99.9% < 300ms). SLA: contractual commitment to external parties with defined penalties for breach.",i:"Our payment API SLO is 99.95% of requests under 500ms on a 30-day rolling window — the SLI feeds our error budget which drives deployment risk decisions and on-call priority."},
+  {d:"Observability",c:"do",n:"Error Budget",l:"How much downtime or failure you're allowed before breaking your reliability promise",t:"Inverse of an SLO — the allowed failure margin. A 99.9% SLO gives 0.1% budget (~43 min/month). Teams spend budget on risky deployments; when exhausted, deployments pause.",i:"A bad deployment burned 60% of our monthly error budget in 2 hours — the team froze non-critical deployments per our error budget policy until the budget recovered."},
+  {d:"Observability",c:"do",n:"OpenTelemetry",l:"A standard way to collect logs, metrics, and traces so any monitoring tool can read them",t:"Vendor-neutral observability framework providing standardized APIs, SDKs, and collectors for metrics, logs, and traces. Exports to Jaeger, Prometheus, Datadog, Splunk, etc.",i:"We instrumented all services with the OpenTelemetry SDK — traces to Jaeger, metrics to Prometheus, logs to ELK, all from the same layer so we're not vendor-locked on observability tooling."},
+  {d:"Observability",c:"do",n:"Audit Log",l:"An immutable record of every important action so you can always prove what happened",t:"Append-only log recording security-relevant events: authentication, authorization decisions, data access, configuration changes. Required for compliance, forensics, and non-repudiation.",i:"Every access to customer PII generates an audit log entry written to an append-only Elasticsearch index via a write-only service account — application bugs cannot tamper with the audit trail."},
+  {d:"Observability",c:"do",n:"Anomaly Detection",l:"Automatically spotting when something behaves unusually compared to its normal pattern",t:"Statistical or ML-based monitoring identifying deviations from baseline — unusual traffic volumes, error spikes, latency outliers — often before threshold-based alerts fire.",i:"We added anomaly detection on API consumer metrics — it learns weekly traffic baselines and fires an alert when a client deviates more than 3 standard deviations, catching credential abuse before rate limits trigger."},
+  {d:"CI/CD",c:"dc",n:"API Contract Testing",l:"Automatically checking that changes don't break apps depending on your API",t:"Testing verifying the API provider fulfills consumer expectations. Pact stores consumer contracts; provider's CI verifies all contracts to detect breaking changes before deployment.",i:"We use Pact for consumer-driven contract testing — each consumer publishes expectations to the Pact Broker, and the provider pipeline fails if any contract is broken before reaching staging."},
+  {d:"CI/CD",c:"dc",n:"Shift-Left Security",l:"Finding and fixing security problems during development instead of at the end",t:"Moving security testing earlier in SDLC — into design, coding, and build phases — reducing cost and time to remediate compared to post-deployment discovery.",i:"We shift security left with Semgrep SAST and secret scanning on every PR — developers get security feedback in the code review workflow, eliminating a separate gate that delayed releases."},
+  {d:"CI/CD",c:"dc",n:"Environmentalization",l:"Separating things that change between environments from the actual logic",t:"Parameterizing environment-specific values — endpoints, credentials, feature flags — separately from application logic, enabling the same artifact to promote through dev, staging, prod.",i:"All environment-specific config is externalized via environment variables and Vault — the same Docker image promotes unchanged through every environment with only runtime config injected at startup."},
+  {d:"CI/CD",c:"dc",n:"Policy as Code",l:"Writing your security rules as code so they're versioned and automatically enforced",t:"Expressing security or compliance policies in machine-readable code (Rego/OPA, Sentinel) that is version-controlled, reviewed, tested, and automatically enforced at runtime.",i:"Authorization policies are written in Rego, stored in git, reviewed like application code — the gateway evaluates them at runtime so every policy change is fully auditable."},
+  {d:"CI/CD",c:"dc",n:"Config Drift",l:"When your running system has silently changed from what your config files say it should be",t:"Divergence between intended state defined in code and actual state of a running system. Caused by manual hotfixes, out-of-band changes, or inconsistent deployments.",i:"We detected config drift after a manual production fix wasn't committed — our drift detection job compares deployed config against git baseline every hour and pages on any discrepancy."},
+  {d:"CI/CD",c:"dc",n:"Immutable Infrastructure",l:"Replace servers completely on each deploy instead of patching running ones",t:"Deployment philosophy where infrastructure is never modified after deployment. Updates replace with freshly built components. Eliminates config drift and manual changes.",i:"Our gateway runs as immutable containers — every deployment builds a fresh image with config baked in and we never SSH into running containers; all changes go through the build pipeline."},
+  {d:"CI/CD",c:"dc",n:"OpenAPI Linting",l:"Automatically checking your API design follows team standards before any code is written",t:"Static analysis of OpenAPI specs using tools like Spectral to enforce design standards — naming, required fields, security definitions, response schemas — in CI.",i:"Every OpenAPI spec change runs Spectral linting in CI — it enforces naming conventions, requires security schemes on all endpoints, and flags missing error schemas before the PR can merge."},
+  {d:"CI/CD",c:"dc",n:"Semantic Versioning",l:"A numbering system telling consumers whether a change is a fix, feature, or breaking change",t:"Versioning scheme (MAJOR.MINOR.PATCH) where MAJOR = breaking, MINOR = backward-compatible addition, PATCH = backward-compatible fix. Communicates impact to consumers.",i:"We enforce semantic versioning — any breaking change bumps the major version and triggers the consumer notification workflow before the old version is deprecated."},
+  {d:"CI/CD",c:"dc",n:"Artifact Promotion",l:"Moving the same tested build through environments instead of rebuilding for each one",t:"CI/CD practice where the exact same versioned artifact is promoted through dev → staging → prod rather than rebuilt per environment. Ensures what you tested is what you deploy.",i:"We use artifact promotion for gateway config packages — the artifact built and tested in dev is the exact one promoted to staging and then prod, so there are no environment-specific build surprises."},
+  {d:"CI/CD",c:"dc",n:"Feature Flags",l:"Switches letting you turn features on or off without deploying new code",t:"Runtime configuration enabling or disabling features independently of deployments. Enables dark launches, gradual rollouts, A/B testing, and instant rollback without redeployment.",i:"We deploy new API behavior behind feature flags — code ships to production disabled, we enable for 1% of traffic to validate, then gradually roll out while keeping instant rollback available."},
+  {d:"CI/CD",c:"dc",n:"Infrastructure as Code",l:"Writing your server setup as code so it can be versioned and automated",t:"Managing infrastructure through machine-readable configuration files (Terraform, Ansible, CloudFormation) rather than manual processes. Enables reproducible environments and change tracking.",i:"All gateway infrastructure is managed with Terraform — creating a new environment is a single pipeline run, and every infrastructure change goes through PR review with automated plan diff before apply."},
+  {d:"CI/CD",c:"dc",n:"Smoke Test",l:"A quick sanity check after deployment to make sure nothing is catastrophically broken",t:"Minimal set of tests run immediately after deployment to verify critical functions work. Fails fast to block bad deployments from receiving production traffic.",i:"Every gateway deployment runs a 90-second smoke test — it verifies auth, routing, and rate limiting on the top 5 critical endpoints, and any failure immediately rolls back before traffic is shifted."}
+];
+
+const TIER_ORDER=["kill","core","mid","adv","exp"];
+const TIER_LABELS={kill:"🔴 Instant Rejection",core:"🔵 Core Must-Know",mid:"🟢 Mid-Level",adv:"🟡 Advanced",exp:"🟣 Expert / Architect"};
+const DOMAIN_ORDER=["Auth","Integration","Security","Messaging","Architecture","Observability","CI/CD"];
+const DOMAIN_LABELS={"Auth":"Auth & Identity","Integration":"Integration Patterns","Security":"Security","Messaging":"Messaging","Architecture":"Architecture","Observability":"Observability","CI/CD":"CI/CD"};
+
+let qFilter='all', tFilter='all';
+
+function setQF(f,el){
+  qFilter=f;
+  document.querySelectorAll('.qfb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderQ();
+}
+function setTF(f,el){
+  tFilter=f;
+  document.querySelectorAll('.tfb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderT();
+}
+
+function renderQ(){
+  const q=(document.getElementById('qsearch')||{}).value||'';
+  const sq=q.toLowerCase().trim();
+  const items=QS.filter(x=>{
+    if(qFilter!=='all'&&x.t!==qFilter)return false;
+    if(sq&&!x.q.toLowerCase().includes(sq)&&!x.h.toLowerCase().includes(sq)&&!x.topic.toLowerCase().includes(sq))return false;
+    return true;
+  });
+  document.getElementById('qcounter').textContent=`Showing ${items.length} of ${QS.length} questions`;
+  if(!items.length){document.getElementById('qout').innerHTML='<div class="q-empty">No questions match your search.</div>';return;}
+  const grouped={};
+  TIER_ORDER.forEach(t=>{grouped[t]=[]});
+  items.forEach(x=>grouped[x.t].push(x));
+  let html='';
+  TIER_ORDER.forEach(tier=>{
+    const arr=grouped[tier];
+    if(!arr.length)return;
+    html+=`<div class="q-sec-title"><span class="tbadge ${tier}">${TIER_LABELS[tier]}</span><span style="color:var(--text3);font-size:11px">${arr.length} question${arr.length>1?'s':''}</span></div><div class="q-list">`;
+    arr.forEach(x=>{
+      const n=QS.indexOf(x)+1;
+      html+=`<div class="qcard" onclick="this.classList.toggle('open')">
+        <div class="qcard-h">
+          <div class="qcard-num">${n}</div>
+          <div class="qcard-body">
+            <div class="qcard-q">${x.q}<span class="topic-tag">[${x.topic}]</span></div>
+            <div class="qcard-hint"><strong>What the interviewer looks for:</strong><br>${x.h}</div>
+          </div>
+          <span class="tbadge ${x.t}">${x.t==='kill'?'REJECT':x.t==='core'?'CORE':x.t==='mid'?'MID':x.t==='adv'?'ADV':'EXPERT'}</span>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('qout').innerHTML=html;
+}
+
+function renderT(){
+  const q=(document.getElementById('tsearch')||{}).value||'';
+  const sq=q.toLowerCase().trim();
+  const items=TERMS.filter(x=>{
+    if(tFilter!=='all'&&x.d!==tFilter)return false;
+    if(sq&&!x.n.toLowerCase().includes(sq)&&!x.l.toLowerCase().includes(sq)&&!x.t.toLowerCase().includes(sq)&&!x.d.toLowerCase().includes(sq))return false;
+    return true;
+  });
+  if(!items.length){document.getElementById('tout').innerHTML='<div class="q-empty">No terms match your search.</div>';return;}
+  const grouped={};
+  DOMAIN_ORDER.forEach(d=>{grouped[d]=[]});
+  items.forEach(x=>grouped[x.d].push(x));
+  let html='';
+  DOMAIN_ORDER.forEach(d=>{
+    const arr=grouped[d];
+    if(!arr.length)return;
+    html+=`<div class="term-sec">${DOMAIN_LABELS[d]} — ${arr.length} term${arr.length>1?'s':''}</div><div class="term-grid">`;
+    arr.forEach(x=>{
+      html+=`<div class="tcard" onclick="this.classList.toggle('open')">
+        <div class="tcard-h"><div class="tcard-name">${x.n}</div><span class="dbadge ${x.c}">${x.d}</span></div>
+        <div class="tcard-lay">${x.l}</div>
+        <div class="tcard-body">
+          <div><div class="tbl tbl-l">YOUR LAYMAN VERSION</div><div class="tbt">${x.l}</div></div>
+          <div><div class="tbl tbl-t">TECHNICAL DEFINITION</div><div class="tbt">${x.t}</div></div>
+          <div class="tbi"><div class="tbl tbl-i">SAY IT IN AN INTERVIEW LIKE THIS</div><div class="tbt">${x.i}</div></div>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('tout').innerHTML=html;
+}
+
+function copyPost(){
+  const text=document.getElementById('lipost').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.querySelector('.li-copy');
+    btn.textContent='Copied!';
+    btn.style.color='var(--teal)';
+    setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},2000);
+  });
+}
+
+renderQ();
+renderT();
+</script>
+</body>
+</html>
